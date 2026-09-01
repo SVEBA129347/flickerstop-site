@@ -4,222 +4,247 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FLICKERSTOP — пульсация света: что доказано, а что ещё нет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0A0A0C;
-    --panel: #15171C;
-    --panel-2: #1C1F26;
-    --text: #F0EDE4;
-    --text-dim: #9B9C9F;
-    --rule: #2A2D34;
-    --accent-warm: #FFC857;
-    --grad-1: #4A6FA5;
-    --grad-2: #8A4FBF;
-    --grad-3: #3FA88C;
+    --bg: #0A0B0D;
+    --panel: #14171B;
+    --grid-line: #1C2126;
+    --rule: #262B31;
+    --text: #E8EAED;
+    --text-dim: #868C94;
+    --amber: #FFB020;
+    --amber-dim: #7A5A22;
+    --cyan: #4FD8E8;
+    --cyan-dim: #2C6B72;
+    --danger: #FF6B5C;
   }
 
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    line-height: 1.6;
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 32px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 32px 100%,
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--text-dim);
+    font-family: "IBM Plex Sans", -apple-system, sans-serif;
+    line-height: 1.65;
     font-size: 17px;
   }
 
-  .sheen {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(ellipse 900px 500px at 15% -10%, rgba(74,111,165,0.18), transparent 60%),
-                radial-gradient(ellipse 700px 500px at 90% 10%, rgba(138,79,191,0.14), transparent 60%),
-                radial-gradient(ellipse 800px 600px at 50% 100%, rgba(63,168,140,0.10), transparent 60%);
-    z-index: 0;
-  }
-
   .wrap {
-    max-width: 760px;
+    max-width: 740px;
     margin: 0 auto;
     padding: 0 24px;
-    position: relative;
-    z-index: 1;
   }
 
+  /* ---------- HERO ---------- */
   header.hero {
-    padding: 100px 0 70px;
-    border-bottom: 1px solid var(--rule);
+    padding: 72px 0 0;
   }
 
   .site-name {
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    color: var(--text-dim);
-    margin-bottom: 28px;
-    font-family: "JetBrains Mono", monospace;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--amber);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .site-name::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 6px var(--amber);
   }
 
   h1.headline {
-    font-size: clamp(32px, 5vw, 46px);
-    line-height: 1.15;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(30px, 4.6vw, 44px);
+    line-height: 1.18;
     font-weight: 600;
-    margin: 0 0 24px;
-    max-width: 14ch;
+    color: var(--text);
+    margin: 0 0 22px;
+    max-width: 15ch;
   }
 
-  .headline .grad {
-    background: linear-gradient(90deg, var(--grad-1), var(--grad-2) 55%, var(--grad-3));
+  h1.headline .fade {
+    background: linear-gradient(90deg, var(--amber), var(--cyan));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .lede {
-    font-size: 19px;
+    font-size: 18px;
     color: var(--text-dim);
-    max-width: 58ch;
-    margin: 0;
+    max-width: 56ch;
+    margin: 0 0 40px;
   }
 
-  section {
-    padding: 64px 0;
+  /* waveform strip */
+  .waveform { display: block; width: 100%; height: auto; margin-bottom: 8px; }
+  .wave-caption {
+    display: flex;
+    justify-content: space-between;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    padding-bottom: 56px;
     border-bottom: 1px solid var(--rule);
   }
+  .wave-caption span:first-child { color: var(--amber); }
+  .wave-caption span:last-child { color: var(--cyan); }
 
+  /* ---------- SECTIONS ---------- */
+  section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--rule);
+  }
   section:last-of-type { border-bottom: none; }
 
-  .kicker {
-    font-size: 13px;
-    color: var(--grad-3);
-    font-family: "JetBrains Mono", monospace;
-    margin-bottom: 12px;
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    margin-bottom: 26px;
   }
-
+  .sec-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 15px;
+    color: var(--amber);
+    opacity: 0.85;
+    white-space: nowrap;
+  }
   h2 {
-    font-size: 28px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 26px;
     font-weight: 600;
-    margin: 0 0 28px;
-    max-width: 20ch;
+    color: var(--text);
+    margin: 0;
+    max-width: 22ch;
   }
 
   h3 {
-    font-size: 19px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 18px;
     font-weight: 600;
-    margin: 36px 0 12px;
+    margin: 34px 0 12px;
     color: var(--text);
   }
 
-  p { color: var(--text-dim); max-width: 68ch; margin: 0 0 16px; }
+  p { max-width: 68ch; margin: 0 0 16px; }
   p:last-child { margin-bottom: 0; }
   strong { color: var(--text); font-weight: 600; }
 
+  ul { max-width: 68ch; margin: 0 0 16px; padding-left: 20px; }
+  ul li { margin-bottom: 6px; }
+  ul strong { color: var(--text); }
+
+  /* ---------- COMPONENTS ---------- */
   .callout {
     background: var(--panel);
-    border-left: 2px solid var(--grad-3);
-    padding: 20px 24px;
-    margin: 24px 0;
-    border-radius: 2px;
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--cyan);
+    padding: 18px 22px;
+    margin: 22px 0;
   }
   .callout p { color: var(--text); margin: 0; }
 
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 24px 0;
-    font-size: 15px;
-  }
-  .data-table th {
-    text-align: left;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-    font-weight: 400;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--rule);
-  }
-  .data-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--rule);
-    color: var(--text);
-  }
-  .data-table .bar-cell {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .bar-track {
-    flex: 1;
-    height: 6px;
-    background: var(--panel-2);
-    border-radius: 3px;
-    overflow: hidden;
-    max-width: 140px;
-  }
-  .bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--grad-1), var(--grad-2));
-  }
-
   .case {
     background: var(--panel);
-    padding: 28px;
-    border-radius: 2px;
-    margin: 24px 0;
+    border: 1px solid var(--rule);
+    padding: 22px 24px;
+    margin: 22px 0;
   }
   .case .tag {
-    font-family: "JetBrains Mono", monospace;
+    font-family: "IBM Plex Mono", monospace;
     font-size: 12px;
-    color: var(--accent-warm);
+    color: var(--amber);
     margin-bottom: 10px;
   }
   .case p { color: var(--text); }
 
   .source-note {
     font-size: 14px;
-    color: var(--text-dim);
     border-top: 1px solid var(--rule);
-    padding-top: 12px;
-    margin-top: 24px;
+    padding-top: 14px;
+    margin-top: 22px;
   }
 
-  .coming-soon {
+  /* instrument-style data table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 22px 0;
+    font-size: 15px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+  }
+  .data-table th {
+    text-align: left;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
     color: var(--text-dim);
-    font-style: italic;
+    font-weight: 400;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
   }
+  .data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--text);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .kp {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500;
+  }
+  .kp.bad { color: var(--danger); }
+  .kp.mid { color: var(--amber); }
+  .kp.good { color: var(--cyan); }
 
-  ul {
-    color: var(--text-dim);
-    max-width: 68ch;
-    margin: 0 0 16px;
-    padding-left: 20px;
-  }
-  ul li { margin-bottom: 6px; }
-  ul strong { color: var(--text); }
-
-  footer {
-    padding: 48px 0 80px;
-  }
+  footer { padding: 44px 0 72px; }
   .author-block {
-    padding-top: 32px;
+    padding-top: 28px;
     border-top: 1px solid var(--rule);
   }
   .author-block p { font-size: 15px; }
 </style>
 </head>
 <body>
-<div class="sheen"></div>
 <div class="wrap">
 
   <header class="hero">
     <div class="site-name">FLICKERSTOP.RU</div>
-    <h1 class="headline">Свет, при котором вы читаете этот текст, <span class="grad">скорее всего мерцает</span></h1>
+    <h1 class="headline">Свет, при котором вы читаете этот текст, <span class="fade">скорее всего мерцает</span></h1>
     <p class="lede">Не так, как лампочка в старом фильме ужасов — а на частоте, которую глаз физически не различает. Вопрос не в том, мерцает ли ваш свет. Вопрос в том, знаете ли вы, насколько сильно — и что об этом говорит наука.</p>
+
+    <svg class="waveform" viewBox="0 0 692 120" preserveAspectRatio="none">
+      <line x1="0" y1="60" x2="692" y2="60" stroke="var(--rule)" stroke-width="1"/>
+      <path d="M0,60 L14,18 L22,95 L34,10 L44,100 L56,20 L64,92 L78,14 L86,98 L100,24 L108,88 L122,16 L130,96 L144,20 L152,90 L166,60 L176,58 Q196,50 216,60 T256,60"
+            fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M256,60 Q286,20 316,60 T376,60 T436,60 T496,60 T556,60 T616,60 T676,60"
+            fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="wave-caption">
+      <span>ЛЮМИНЕСЦЕНТНАЯ С ЭМПРА · Кп 40%</span>
+      <span>КАЧЕСТВЕННЫЙ LED · Кп 2%</span>
+    </div>
   </header>
 
   <section id="proven">
-    <div class="kicker">01 — доказано и нормировано</div>
-    <h2>Что известно точно</h2>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Что известно точно</h2></div>
 
     <h3>Что такое пульсация света</h3>
     <p>Свечение большинства ламп не непрерывное — оно колеблется из-за перепадов силы тока в сети или самом источнике питания. Если частота этих колебаний выше 50 Гц, глаз перестаёт видеть перепады яркости как мерцание. Но «не видеть» не значит «не воздействует».</p>
@@ -238,12 +263,12 @@
     <p>По российским санитарным нормам пульсация при работе с компьютером не должна превышать 5% — однако при реальных замерах на рабочих местах превышение в 2–4 раза встречается более чем в 80% случаев.</p>
 
     <table class="data-table">
-      <tr><th>Источник света</th><th>Коэффициент пульсации</th></tr>
-      <tr><td>Люминесцентные с ЭМПРА</td><td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>40%</td></tr>
-      <tr><td>Натриевые уличные</td><td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width:75%"></span></span>30%</td></tr>
-      <tr><td>Лампы накаливания</td><td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width:38%"></span></span>15%</td></tr>
-      <tr><td>КЛЛ (энергосберегающие)</td><td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width:20%"></span></span>8%</td></tr>
-      <tr><td>Качественный LED</td><td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width:5%"></span></span>2%</td></tr>
+      <tr><th>Источник света</th><th>Кп</th></tr>
+      <tr><td>Люминесцентные с ЭМПРА</td><td class="kp bad">40%</td></tr>
+      <tr><td>Натриевые уличные</td><td class="kp bad">30%</td></tr>
+      <tr><td>Лампы накаливания</td><td class="kp mid">15%</td></tr>
+      <tr><td>КЛЛ (энергосберегающие)</td><td class="kp mid">8%</td></tr>
+      <tr><td>Качественный LED</td><td class="kp good">2%</td></tr>
     </table>
     <p style="font-size:15px">Кстати, почему у ламп накаливания пульсация невысокая, хотя ток в сети точно так же переменный: раскалённая спираль обладает тепловой инерцией и просто не успевает остыть за долю секунды между полупериодами тока — она лишь слегка тускнеет. Чем толще нить накала (то есть чем мощнее лампа), тем медленнее она остывает — поэтому у мощных ламп накаливания пульсация обычно ниже, чем у маломощных.</p>
 
@@ -257,8 +282,7 @@
   </section>
 
   <section id="open-question">
-    <div class="kicker">02 — открытый вопрос науки</div>
-    <h2>Что наука ещё изучает</h2>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Что наука ещё изучает</h2></div>
 
     <h3>Невидимая частота — не значит безопасная</h3>
     <p>Интуиция подсказывает: если мерцание незаметно глазу, значит, всё в порядке. Но именно это предположение сейчас пересматривается. Одно из недавних исследований (LEUKOS, 2021) проверило, как пульсирующий светодиодный свет разных частот влияет на пульс и давление у здоровых людей.</p>
@@ -273,8 +297,7 @@
   </section>
 
   <section id="screens">
-    <div class="kicker">03 — не только лампы</div>
-    <h2>Экраны тоже пульсируют</h2>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Экраны тоже пульсируют</h2></div>
     <div class="case">
       <div class="tag">Cephalalgia, 2004</div>
       <p>У пациента мигрень возникала каждый раз, когда он садился за компьютер. Проблему решили сменой частоты обновления монитора с 60 до 75 Гц через настройки Windows. Головные боли прекратились.</p>
@@ -283,8 +306,7 @@
   </section>
 
   <section id="packaging">
-    <div class="kicker">04 — почему нельзя просто посмотреть на коробку</div>
-    <h2>Упаковка вас, скорее всего, обманет</h2>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Упаковка вас, скорее всего, обманет</h2></div>
     <p>Методика измерения коэффициента пульсации закреплена официально (ГОСТ 33393-2015), а сам показатель определён в ГОСТ Р 54945. Казалось бы — бери и печатай на упаковке. Но жёсткого контроля за этим на практике нет.</p>
     <p>В итоге бюджетные лампы часто вообще не указывают Кп — как будто параметра не существует. А там, где указывают, цифра нередко идёт мелким шрифтом среди десятка других характеристик, без частоты измерения и без ссылки на метод — то есть проверить, насколько ей можно доверять, покупатель в магазине не может.</p>
     <p>То же самое происходит и с CRI. Высокий CRI (90+) требует более сложного набора люминофоров и дороже в производстве — поэтому если на дешёвой лампе написано «CRI 90», в большинстве случаев это неправда: независимые тесты регулярно находят реальный CRI на 5–15 пунктов ниже заявленного. Логика простая: ни один производитель не станет честно печатать «CRI 65», если можно написать «80» или вообще не указывать цифру. Честные исключения на рынке есть, но их мало — и это скорее подтверждает правило, чем опровергает его.</p>
@@ -295,8 +317,7 @@
   </section>
 
   <section id="devices">
-    <div class="kicker">05 — как проверить</div>
-    <h2>Обзор приборов</h2>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Обзор приборов</h2></div>
     <p>От бесплатного до профессионального — по нарастающей, в зависимости от того, нужна вам грубая ориентировка или официальный протокол измерений.</p>
 
     <h3>Ступень 0 — камера смартфона (бесплатно)</h3>
@@ -319,8 +340,7 @@
   </section>
 
   <section id="diy-projects">
-    <div class="kicker">06 — свои эксперименты</div>
-    <h2>Что мы сами пробовали сделать</h2>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Что мы сами пробовали сделать</h2></div>
     <p>Нам самим было любопытно — и руки чесались попробовать. Ни один из проектов не стал готовым продуктом, но и выложить наработки в открытый доступ не жалко.</p>
     <p><strong>Изменитель пульсаций</strong> — устройство на основе открытого проекта, снижающее пульсацию для уже установленных светильников. Технически работало, довести до продукта не вышло — это уже отдельный бизнес, а не только инженерная задача.</p>
     <p><strong>Индикатор пульсации с наглядным дисплеем</strong> — самодельный «бегунок» для быстрой ориентировки: не поверенный измерительный прибор, а способ быстро понять, где искать проблему, прежде чем звать специалиста с сертифицированным оборудованием.</p>
